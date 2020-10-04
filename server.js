@@ -24,7 +24,7 @@ app.use(cors());
 
 // db config
 const mongoURI =
-  "mongodb+srv://admin:UDFAB949M9ukyGgY@cluster0.xp8le.mongodb.net/<dbname>?retryWrites=true&w=majority";
+  "mongodb+srv://admin:PsE6BtaTRyV7LNu5@cluster0.tgb9s.mongodb.net/<dbname>?retryWrites=true&w=majority";
 
 mongoose.connect(mongoURI, {
   useCreateIndex: true,
@@ -33,14 +33,14 @@ mongoose.connect(mongoURI, {
 });
 
 mongoose.connection.once("open", () => {
-  console.log("DB CONNECTED");
+  console.log("Mongodb CONNECTED");
 
-  const changeStream = mongoose.connection.collection("messages").watch()
+  const changeStream = mongoose.connection.collection("messages").watch();
   changeStream.on("change", (change) => {
     pusher.trigger("messages", "newMessage", {
       change: change,
     });
-  })
+  });
 });
 
 // api routes
@@ -63,9 +63,10 @@ app.get("/retrieve/conversation", (req, res) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      data.sort((b, a) => {
-        return a.timestamp - b.timestamp;
-      });
+      // Sort descending
+      // data.sort((b, a) => {
+      //   return a.timestamp - b.timestamp;
+      // });
       res.status(200).send(data);
     }
   });
